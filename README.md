@@ -14,7 +14,7 @@ Make sure that services are running:
  
 Make sure that you have this libraries installed in your local maven repsoitory:
 
- - [my-company-common](https://github.com/ivans-innovation-lab/my-company-common)
+ - [my-company-common (transient dependency)](https://github.com/ivans-innovation-lab/my-company-common)
  - [my-company-blog-domain](https://github.com/ivans-innovation-lab/my-company-blog-domain)
 
 ```bash
