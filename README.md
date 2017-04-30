@@ -2,6 +2,11 @@
 
 ## Running instructions
 
+Run RabbitMQ
+```
+$ brew services start rabbitmq
+```
+
 Make sure that services are running:
 
  - my-company-configuration-backingservice
