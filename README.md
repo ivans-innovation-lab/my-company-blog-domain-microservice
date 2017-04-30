@@ -23,3 +23,20 @@ $ ./mvnw spring-boot:run
 ```
 
 Application will be available on port 8080 (http://localhost:8080)
+
+## Explore
+
+### curl
+
+```
+$ curl -H "Content-Type: application/json" -X POST -d '{"title":"xyz","rawContent":"xyz","publicSlug": "publicslug","draft": true,"broadcast": true,"category": "ENGINEERING", "publishAt": "2026-12-23T14:30:00+00:00"}' http://127.0.0.1:8080/blogpostcommands 
+```
+
+### rambittmq
+
+Open RabbitMQ management web console at http://localhost:15672/ and explore exchanges, queues and messages.
+
+### registry backing service
+
+Open Registry (Eureka) web console at http://localhost:8761/ and find 'my-company-blog-domain-microservice' registered.
+
