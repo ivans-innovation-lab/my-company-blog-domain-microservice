@@ -7,11 +7,12 @@
 	<packaging>jar</packaging>
 	<name>my company blog domain microservice</name>
 	<description>Blog Domain - Command Side MicroService</description>
-
+    <version>1.0.0-SNAPSHOT</version>
+    
 	<parent>
 		<groupId>com.idugalic</groupId>
 		<artifactId>my-company-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<properties>
@@ -22,7 +23,7 @@
 		<dependency>
 			<groupId>com.idugalic</groupId>
 			<artifactId>my-company-blog-domain</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.axonframework</groupId>
