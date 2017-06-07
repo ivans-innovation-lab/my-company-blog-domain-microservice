@@ -9,10 +9,10 @@ $ brew services start rabbitmq
 
 Make sure that services are running:
 
- - my-company-configuration-backingservice
- - my-company-registry-backingservice
+ - [my-company-configuration-backingservice](https://github.com/ivans-innovation-lab/my-company-configuration-backingservice)
+ - [my-company-registry-backingservice](https://github.com/ivans-innovation-lab/my-company-registry-backingservice)
  
-Make sure that you have this libraries installed in your local maven repsoitory:
+Make sure that you have this libraries installed in your local maven repository:
 
  - [my-company-common (transient dependency)](https://github.com/ivans-innovation-lab/my-company-common)
  - [my-company-blog-domain](https://github.com/ivans-innovation-lab/my-company-blog-domain)
