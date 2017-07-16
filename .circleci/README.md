@@ -1,5 +1,5 @@
 
-Registry service requires 
+This service requires 
 
 - 'my-company-configuration-backingservice' (on staging and production)
 - 'my-company-registry-backingservice' (on staging and production)
