@@ -1,0 +1,154 @@
+defaults: &defaults
+  working_directory: /home/circleci/my-company-blog-domain-microservice
+  docker:
+    - image: circleci/openjdk:8-jdk-browsers
+    
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+
+      - checkout
+
+      - restore_cache:
+          key: my-company-blog-domain-microservice-{{ checksum "pom.xml" }}
+
+      - run: 
+          name: Install maven artifact
+          command: |
+            if [ "${CIRCLE_BRANCH}" != "master" ]; then
+              mvn -s .circleci/maven.settings.xml install -P idugalic-cloud
+            fi
+            
+      - deploy:
+          name: Deploy maven artifact
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              mvn -s .circleci/maven.settings.xml deploy -P idugalic-cloud
+            fi
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: my-company-blog-domain-microservice-{{ checksum "pom.xml" }}
+      
+      - run:
+          name: Collecting test results
+          command: |
+            mkdir -p junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} junit/ \;
+          when: always
+          
+      - store_test_results:
+          path: junit/
+          
+      - store_artifacts:
+          path: junit/
+          
+      - run:
+          name: Collecting artifacts
+          command: |
+            mkdir -p artifacts/
+            find . -type f -regex ".*/target/.*jar" -exec cp {} artifacts/ \;
+     
+      - store_artifacts:
+          path: artifacts/
+          
+      - persist_to_workspace:
+          root: artifacts/
+          paths:
+            - .
+
+  staging:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: workspace/
+      - run:
+          name: Install CloudFoundry CLI
+          command: |
+            curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+            sudo dpkg -i cf-cli_amd64.deb
+            cf -v
+      - run:
+          name: Deploy to Staging - PWS CLoudFoundry
+          command: |
+            cf api https://api.run.pivotal.io
+            cf auth idugalic@gmail.com $CF_PASSWORD
+            cf target -o idugalic -s Stage
+            cf push stage-my-company-blog-domain-microservice -p workspace/*.jar --no-start
+            cf bind-service stage-my-company-blog-domain-microservice my-company-configuration-backingservice
+            cf bind-service stage-my-company-blog-domain-microservice mysql-stage
+            cf bind-service stage-my-company-blog-domain-microservice rabbit-stage
+            cf restart stage-my-company-blog-domain-microservice
+            
+  
+  # A very simple e2e test    
+  staging-e2e:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: workspace/
+          
+      - run: 
+          name: End to end test on Staging
+          command: curl -i https://stage-my-company-blog-domain-microservice.cfapps.io/health
+      
+      
+  production:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: workspace/
+          
+      - run:
+          name: Install CloudFoundry CLI
+          command: |
+            curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+            sudo dpkg -i cf-cli_amd64.deb
+            cf -v
+          
+      - run:
+          name: Deploy to Production - PWS CLoudFoundry
+          command: |
+            cf api https://api.run.pivotal.io
+            cf auth idugalic@gmail.com $CF_PASSWORD
+            cf target -o idugalic -s Prod
+            cf push prod-my-company-blog-domain-microservice -p workspace/*.jar --no-start
+            cf bind-service prod-my-company-blog-domain-microservice my-company-configuration-backingservice
+            cf bind-service prod-my-company-blog-domain-microservice mysql-prod
+            cf bind-service prod-my-company-blog-domain-microservice rabbit-prod
+            cf restart prod-my-company-blog-domain-microservice
+      
+  
+workflows:
+  version: 2
+  my-company-blog-domain-microservice-workflow:
+    jobs:
+      - build
+      - staging:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - staging-e2e:
+          requires:
+            - staging
+          filters:
+            branches:
+              only: master
+      - approve-production:
+          type: approval
+          requires:
+            - staging-e2e
+          filters:
+            branches:
+              only: master
+      - production:
+          requires:
+            - approve-production
+          filters:
+            branches:
+              only: master
