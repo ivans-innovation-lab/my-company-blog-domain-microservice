@@ -79,6 +79,7 @@ jobs:
             cf target -o idugalic -s Stage
             cf push stage-my-company-blog-domain-microservice -p workspace/*.jar --no-start
             cf bind-service stage-my-company-blog-domain-microservice my-company-configuration-backingservice
+            cf bind-service prod-my-company-blog-domain-microservice my-company-registry-backingservice
             cf bind-service stage-my-company-blog-domain-microservice mysql-stage
             cf bind-service stage-my-company-blog-domain-microservice rabbit-stage
             cf restart stage-my-company-blog-domain-microservice
@@ -117,6 +118,7 @@ jobs:
             cf target -o idugalic -s Prod
             cf push prod-my-company-blog-domain-microservice -p workspace/*.jar --no-start
             cf bind-service prod-my-company-blog-domain-microservice my-company-configuration-backingservice
+            cf bind-service prod-my-company-blog-domain-microservice my-company-registry-backingservice
             cf bind-service prod-my-company-blog-domain-microservice mysql-prod
             cf bind-service prod-my-company-blog-domain-microservice rabbit-prod
             cf restart prod-my-company-blog-domain-microservice
