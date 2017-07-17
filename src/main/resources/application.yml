@@ -1,2 +1,9 @@
 server:
   port: 8080
+  
+management:
+  cloudfoundry:
+    skip-ssl-validation: true
+  info:
+    git:
+      mode: full
