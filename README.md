@@ -1,4 +1,4 @@
-# my-company-blog-domain-microservice [![CircleCI](https://circleci.com/gh/ivans-innovation-lab/my-company-blog-domain-microservice.svg?style=svg)](https://circleci.com/gh/ivans-innovation-lab/my-company-blog-domain-microservice)
+# [projects](http://ivans-innovation-lab.github.io/projects)/my-company-blog-domain-microservice [![CircleCI](https://circleci.com/gh/ivans-innovation-lab/my-company-blog-domain-microservice.svg?style=svg)](https://circleci.com/gh/ivans-innovation-lab/my-company-blog-domain-microservice)
 
 ## Running instructions
 
